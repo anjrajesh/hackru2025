@@ -1,0 +1,22 @@
+{
+  "name": "saferoute-backend",
+  "version": "1.0.0",
+  "description": "SafeRoute backend API with Hugging Face AI integration",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": ["safety", "mapping", "ai"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "@huggingface/inference": "^2.6.4",
+    "twilio": "^4.19.0",
+    "body-parser": "^1.20.2"
+  }
+}

@@ -5,9 +5,12 @@ A tool to help people Walk safely, Detect danger zones, and Report incidents. We
 ## Features
 
 - **Interactive Incident Reporting**: Click on the map to report safety incidents
+- **SMS Reporting**: Text incidents directly to a Twilio phone number
+- **Voice Reporting**: Use speech-to-text for hands-free incident reporting
 - **AI-Powered Categorization**: Automatic incident classification using Hugging Face NLP models
 - **Time-Based Analysis**: Filter incidents by time of day (morning, afternoon, evening, night)
-- **Safety Planning**: See when incidents occur to plan safer routes
+- **Real-Time Visualization**: See all incidents on an interactive map
+- **Safety Statistics**: View incident trends and patterns
 - **JSON Storage**: Simple file-based data persistence
 
 ## Incident Categories
@@ -79,6 +82,8 @@ REACT_APP_API_URL=http://localhost:5000/api
 cd backend
 npm start
 ```
+
+The backend will run on http://localhost:5000
 
 ### Start Frontend 
 

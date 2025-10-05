@@ -1,7 +1,7 @@
 {
   "name": "saferoute-backend",
   "version": "1.0.0",
-  "description": "SafeRoute backend API with Hugging Face AI integration",
+  "description": "WDR backend API",
   "main": "server.js",
   "type": "module",
   "scripts": {

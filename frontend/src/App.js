@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Map from './components/Map';
 import IncidentForm from './components/IncidentForm';
 import Statistics from './components/Statistics';
@@ -21,13 +21,7 @@ function App() {
 
   const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
-  // Fetch incidents for a certain time period
-  useEffect(() => {
-    fetchIncidents();
-    fetchStats();
-  }, [selectedTimePeriod]);
-
-  const fetchIncidents = async () => {
+  const fetchIncidents = useCallback(async () => {
     try {
       const url = selectedTimePeriod === 'all' 
         ? `${API_URL}/incidents`
@@ -51,9 +45,9 @@ function App() {
       console.error('Error fetching incidents:', error);
       setLoading(false);
     }
-  };
+  }, [selectedTimePeriod, API_URL]);
 
-  const fetchStats = async () => {
+  const fetchStats = useCallback(async () => {
     try {
       const response = await fetch(`${API_URL}/stats`);
       const data = await response.json();
@@ -61,7 +55,23 @@ function App() {
     } catch (error) {
       console.error('Error fetching stats:', error);
     }
-  };
+  }, [API_URL]);
+
+  // Fetch incidents for a certain time period
+  useEffect(() => {
+    fetchIncidents();
+    fetchStats();
+  }, [fetchIncidents, fetchStats]);
+
+  // Auto-refresh incidents every 5 seconds to show new SMS reports in real-time
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchIncidents();
+      fetchStats();
+    }, 5000); // Refresh every 5 seconds
+
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, [fetchIncidents, fetchStats]);
 
   const handleMapClick = (lat, lng) => {
     setSelectedLocation({ lat, lng });

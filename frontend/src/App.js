@@ -189,8 +189,6 @@ function App() {
             )}
           </div>
 
-          {showSMSInfo && <SMSInfo />}
-
           <TimeFilter 
             selectedPeriod={selectedTimePeriod}
             onPeriodChange={handleTimePeriodChange}
@@ -262,6 +260,17 @@ function App() {
           onSubmit={handleVoiceSubmit}
           onClose={handleCloseForm}
         />
+      )}
+
+      {showSMSInfo && (
+        <div className="modal-overlay" onClick={() => setShowSMSInfo(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close" onClick={() => setShowSMSInfo(false)}>
+              ×
+            </button>
+            <SMSInfo />
+          </div>
+        </div>
       )}
     </div>
   );

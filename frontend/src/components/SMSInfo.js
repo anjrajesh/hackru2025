@@ -15,7 +15,7 @@ function SMSInfo() {
 
   return (
     <div className="sms-info">
-      <h3>📱 SMS Reporting</h3>
+      <h3>SMS Reporting</h3>
       {!smsEnabled && (
         <div className="sms-warning" style={{
           backgroundColor: '#fff3cd',
@@ -24,7 +24,7 @@ function SMSInfo() {
           marginBottom: '10px',
           border: '1px solid #ffc107'
         }}>
-          ⚠️ SMS reporting is not configured.
+          WARNING: SMS reporting is not configured.
         </div>
       )}
       
@@ -33,7 +33,7 @@ function SMSInfo() {
       </p>
       
       <div className="sms-number">
-        <strong>📞 Text To:</strong>
+        <strong>Text To:</strong>
         <div className="phone-number" style={{
           fontSize: '1.5em',
           color: '#007bff',
@@ -43,7 +43,7 @@ function SMSInfo() {
           {twilioNumber}
         </div>
         <p style={{ fontSize: '0.9em', color: '#666' }}>
-          Standard SMS rates may apply
+          <em>Standard SMS rates may apply</em>
         </p>
       </div>
 
@@ -56,7 +56,7 @@ function SMSInfo() {
           borderRadius: '5px',
           margin: '10px 0'
         }}>
-          <strong>Simple Format:</strong>
+          <strong>Suggested Format:</strong>
           <code style={{ display: 'block', margin: '5px 0' }}>
             Someone is following me near the library
           </code>

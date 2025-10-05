@@ -273,19 +273,19 @@ app.get('/api/stats', (req, res) => {
 // Rutgers locations with coordinates
 const knownLocations = {
   // Student Centers / common hubs
-  'college avenue student center': { lat: 40.503000, lon: -74.451900 }, 
-  'student center': { lat: 40.503000, lon: -74.451900 }, 
-  'brower commons': { lat: 40.503360, lon: -74.451920 }, 
-  'busch student center': { lat: 40.521900, lon: -74.459100 }, 
-  'rutgers student center': { lat: 40.503000, lon: -74.451900 }, 
+  'college avenue student center': { lat: 40.502788, lon: -74.452001 }, 
+  'student center': { lat: 40.502788, lon: -74.452001 }, 
+  'brower commons': { lat: 40.503671, lon: -74.451653 }, 
+  'busch student center': { lat: 40.523372, lon: -74.458374 }, 
+  'rutgers student center': { lat: 40.502788, lon: -74.452001 }, 
   'red oak lane': { lat: 40.522800, lon: -74.438800 }, 
-  'livingston student center': { lat: 40.523700, lon: -74.436200 }, 
-  'livi': { lat: 40.523700, lon: -74.436200 }, 
+  'livingston student center': { lat: 40.523905, lon: -74.436616 }, 
+  'livi': { lat: 40.523955, lon: -74.437877 }, 
 
   // Libraries
-  'alexander library': { lat: 40.504649, lon: -74.452597 },
-  'library': { lat: 40.504649, lon: -74.452597 },
-  'carr library': { lat: 40.523670, lon: -74.436190 },
+  'alexander library': { lat: 40.504987, lon: -74.452441 },
+  'library': { lat: 40.504987, lon: -74.452441 },
+  'carr library': { lat: 40.522454, lon: -74.437287 },
   'kilmer library': { lat: 40.523670, lon: -74.436190 },
 
   // Academic buildings
@@ -294,13 +294,13 @@ const knownLocations = {
   'murray hall': { lat: 40.500100, lon: -74.447800 },
   'van nest hall': { lat: 40.500300, lon: -74.449300 },
   'bishop house': { lat: 40.499700, lon: -74.448200 },
-  'hill center': { lat: 40.520800, lon: -74.459100 },
+  'hill center': { lat: 40.521965, lon: -74.463245 },
   'arc': { lat: 40.523700, lon: -74.436200 },
   'allison road classroom': { lat: 40.523700, lon: -74.436200 },
   'bsa building': { lat: 40.523700, lon: -74.436200 },
 
   // Campuses
-  'livingston campus': { lat: 40.523700, lon: -74.436200 },
+  'livingston campus': { lat: 40.523955, lon: -74.437877 }, 
   'busch campus': { lat: 40.521900, lon: -74.459100 },
   'college avenue': { lat: 40.500700, lon: -74.447400 },
   'college ave': { lat: 40.500700, lon: -74.447400 },
@@ -365,8 +365,15 @@ const knownLocations = {
 const checkKnownLocation = (text) => {
   const normalizedText = text.toLowerCase().trim();
   
-  for (const [locationName, coords] of Object.entries(knownLocations)) {
-    if (normalizedText.includes(locationName)) {
+  // Sort locations by length (descending) to match longer/more specific names first
+  const sortedLocations = Object.entries(knownLocations).sort((a, b) => b[0].length - a[0].length);
+  
+  for (const [locationName, coords] of sortedLocations) {
+    // Use word boundaries to avoid partial matches in descriptions
+    // Only match if the location name appears as a distinct phrase
+    const locationPattern = new RegExp(`\\b${locationName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
+    
+    if (locationPattern.test(normalizedText)) {
       console.log(`Found known location: ${locationName}`);
       return {
         latitude: coords.lat,
@@ -460,9 +467,10 @@ const geocodeLocation = async (locationText) => {
 
 // Helper function to extract location from SMS text
 const extractLocationFromText = (text) => {
-  // Common location indicators
+  // Common location indicators - only match when followed by actual location words
   const patterns = [
-    /(?:at|near|on|in|by)\s+([^,.!?]+?)(?:\s+in\s+new\s+brunswick)?(?:[,.!?]|$)/gi,
+    /(?:at|near|on)\s+(?:the\s+)?([^,.!?]+?)(?:\s+in\s+new\s+brunswick)?(?:[,.!?]|$)/gi,
+    /(?:in|by)\s+(?:the\s+)?([a-z\s]+(?:library|hall|center|campus|street|avenue|road|station|lot|apartments|gym|building|commons))/gi,
     /location:?\s*([^,.!?]+)/gi,
   ];
   
@@ -470,7 +478,12 @@ const extractLocationFromText = (text) => {
     const matches = [...text.matchAll(pattern)];
     if (matches.length > 0) {
       // Return the last match (usually most specific)
-      return matches[matches.length - 1][1].trim();
+      const extracted = matches[matches.length - 1][1].trim();
+      // Filter out very short matches that might be false positives
+      if (extracted.length >= 4) {
+        console.log('Extracted location from text:', extracted);
+        return extracted;
+      }
     }
   }
   
@@ -484,6 +497,7 @@ const parseLocation = async (text) => {
   const match = text.match(coordPattern);
   
   if (match) {
+    console.log('Found explicit coordinates in text');
     return {
       latitude: parseFloat(match[1]),
       longitude: parseFloat(match[2]),
@@ -491,11 +505,23 @@ const parseLocation = async (text) => {
     };
   }
   
-  // Try to extract location from text
+  // First, check known locations directly
+  const knownLocation = checkKnownLocation(text);
+  if (knownLocation) {
+    console.log('Matched known location directly');
+    return {
+      latitude: knownLocation.latitude,
+      longitude: knownLocation.longitude,
+      locationName: knownLocation.locationName,
+      source: 'known_location'
+    };
+  }
+  
+  // Try to extract location from text using prepositions
   const locationText = extractLocationFromText(text);
   
   if (locationText) {
-    console.log('Extracted location text:', locationText);
+    console.log('Trying to geocode extracted location:', locationText);
     const geocoded = await geocodeLocation(locationText);
     
     if (geocoded) {
@@ -508,11 +534,12 @@ const parseLocation = async (text) => {
     }
   }
   
-  // Default to New Brunswick coordinates if no location provided
-  console.log('Using default New Brunswick coordinates');
+  // Default to New Brunswick downtown coordinates if no location found
+  console.log('No location found - using default New Brunswick coordinates');
   return {
-    latitude: 40.5019,
-    longitude: -74.4505,
+    latitude: 40.4969,
+    longitude: -74.4463,
+    locationName: 'New Brunswick (default)',
     source: 'default'
   };
 };

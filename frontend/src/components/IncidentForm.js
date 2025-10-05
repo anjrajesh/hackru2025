@@ -1,8 +1,16 @@
 import React, { useState } from 'react';
 
+// Get current datetime in local timezone
+const getCurrentDateTime = () => {
+  const now = new Date();
+  const offset = now.getTimezoneOffset() * 60000;
+  const localTime = new Date(now - offset);
+  return localTime.toISOString().slice(0, 16);
+};
+
 function IncidentForm({ location, onSubmit, onClose }) {
   const [description, setDescription] = useState('');
-  const [timestamp, setTimestamp] = useState(new Date().toISOString().slice(0, 16));
+  const [timestamp, setTimestamp] = useState(getCurrentDateTime());
   const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -25,7 +33,7 @@ function IncidentForm({ location, onSubmit, onClose }) {
     try {
       await onSubmit(incidentData);
       setDescription('');
-      setTimestamp(new Date().toISOString().slice(0, 16));
+      setTimestamp(getCurrentDateTime());
     } catch (error) {
       console.error('Error submitting:', error);
     } finally {
@@ -36,16 +44,16 @@ function IncidentForm({ location, onSubmit, onClose }) {
   return (
     <div className="form-modal" onClick={onClose}>
       <div className="form-content" onClick={(e) => e.stopPropagation()}>
-        <h2>Report Safety Incident</h2>
+        <h2>Report Incident</h2>
         
         <div className="location-info">
-          📍 Location: {location.lat.toFixed(6)}, {location.lng.toFixed(6)}
+          Location: {location.lat.toFixed(6)}, {location.lng.toFixed(6)}
         </div>
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="description">
-              Incident Description *
+              Description *
             </label>
             <textarea
               id="description"

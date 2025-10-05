@@ -116,7 +116,7 @@ function App() {
         fetchStats();
         setShowVoiceReporter(false);
         setSelectedLocation(null);
-        alert('Voice report submitted successfully! 🎤');
+        alert('Voice report submitted successfully');
       } else {
         throw new Error('Failed to submit voice report');
       }
@@ -146,35 +146,35 @@ function App() {
       <div className="App-content">
         <div className="sidebar">
           <div className="reporting-method">
-            <h3>Reporting Method</h3>
+            <h3>Report Method</h3>
             <div className="method-buttons">
               <button
                 className={`method-btn ${reportingMethod === 'manual' ? 'active' : ''}`}
                 onClick={() => setReportingMethod('manual')}
               >
-                ✍️ Manual
+                Manual
               </button>
               <button
                 className={`method-btn ${reportingMethod === 'voice' ? 'active' : ''}`}
                 onClick={() => setReportingMethod('voice')}
               >
-                🎤 Voice
+                Voice
               </button>
               <button
                 className="method-btn sms-btn"
                 onClick={() => setShowSMSInfo(!showSMSInfo)}
               >
-                📱 SMS Info
+                SMS Info
               </button>
             </div>
             {reportingMethod === 'voice' && (
               <p className="method-hint">
-                Click on map, then speak to record
+                Click map location, then record incident description
               </p>
             )}
             {reportingMethod === 'manual' && (
               <p className="method-hint">
-                Click on map, then type description
+                Click map location, then type incident description
               </p>
             )}
           </div>
@@ -189,19 +189,19 @@ function App() {
           <Statistics incidents={allIncidents} stats={stats} />
           
           <div className="instructions">
-            <h3>How to Use</h3>
+            <h3>Instructions</h3>
             <ol>
-              <li>Choose reporting method (Manual, Voice, or SMS)</li>
-              <li>Filter by time to see when incidents occur</li>
-              <li>Click on the map to select a location</li>
-              <li>Describe the safety incident</li>
-              <li>AI will automatically categorize it</li>
-              <li>View reports and hotspots on the map</li>
+              <li>Select reporting method: Manual, Voice, or SMS</li>
+              <li>Apply time filter to view incidents by period</li>
+              <li>Click map to select location</li>
+              <li>Describe the incident</li>
+              <li>AI automatically categorizes reports</li>
+              <li>View data and patterns on map</li>
             </ol>
           </div>
 
           <div className="legend">
-            <h3>Incident Key</h3>
+            <h3>Categories</h3>
             <div className="legend-item">
               <span className="legend-color harassment"></span>
               <span>Harassment</span>

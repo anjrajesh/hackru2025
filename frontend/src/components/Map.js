@@ -17,29 +17,29 @@ L.Icon.Default.mergeOptions({
 // Marker icons for different categories
 const createCustomIcon = (category) => {
   const colors = {
-    'Assault': '#c0392b',
-    'Harassment': '#e74c3c',
-    'Lighting Issue': '#f39c12',
-    'Suspicious Behavior': '#e67e22',
-    'Other': '#95a5a6'
+    'Assault': '#dc2626',
+    'Harassment': '#ef4444',
+    'Lighting Issue': '#f59e0b',
+    'Suspicious Behavior': '#f97316',
+    'Other': '#6b7280'
   };
 
-  const color = colors[category] || '#95a5a6';
+  const color = colors[category] || '#6b7280';
 
   return L.divIcon({
     className: 'custom-marker',
     html: `
       <div style="
         background-color: ${color};
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        border: 3px solid white;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        width: 24px;
+        height: 24px;
+        border-radius: 3px;
+        border: 2px solid white;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
       "></div>
     `,
-    iconSize: [30, 30],
-    iconAnchor: [15, 15],
+    iconSize: [24, 24],
+    iconAnchor: [12, 12],
   });
 };
 
@@ -80,10 +80,10 @@ function IncidentLayers({ incidents }) {
       });
 
       marker.bindPopup(`
-        <div style="min-width: 200px;">
-          <h3 style="margin: 0 0 8px 0; color: #333;">${incident.category}</h3>
-          <p style="margin: 0 0 8px 0; color: #666;">${incident.description}</p>
-          <small style="color: #999;">${new Date(incident.timestamp).toLocaleString()}</small>
+        <div style="min-width: 200px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">
+          <h3 style="margin: 0 0 10px 0; color: #1a1a1a; font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">${incident.category}</h3>
+          <p style="margin: 0 0 10px 0; color: #525252; font-size: 0.813rem; line-height: 1.5;">${incident.description}</p>
+          <small style="color: #737373; font-size: 0.75rem;">${new Date(incident.timestamp).toLocaleString()}</small>
         </div>
       `);
 
@@ -147,10 +147,10 @@ function MapContent({ incidents, onMapClick, selectedLocation }) {
           icon={createCustomIcon(incident.category)}
         >
           <Popup>
-            <div style={{ minWidth: '200px' }}>
-              <h3 style={{ margin: '0 0 8px 0', color: '#333' }}>{incident.category}</h3>
-              <p style={{ margin: '0 0 8px 0', color: '#666' }}>{incident.description}</p>
-              <small style={{ color: '#999' }}>{new Date(incident.timestamp).toLocaleString()}</small>
+            <div style={{ minWidth: '200px', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
+              <h3 style={{ margin: '0 0 10px 0', color: '#1a1a1a', fontSize: '0.875rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{incident.category}</h3>
+              <p style={{ margin: '0 0 10px 0', color: '#525252', fontSize: '0.813rem', lineHeight: 1.5 }}>{incident.description}</p>
+              <small style={{ color: '#737373', fontSize: '0.75rem' }}>{new Date(incident.timestamp).toLocaleString()}</small>
             </div>
           </Popup>
         </Marker>
@@ -158,13 +158,20 @@ function MapContent({ incidents, onMapClick, selectedLocation }) {
       {selectedLocation && (
         <Marker
           position={[selectedLocation.lat, selectedLocation.lng]}
-          icon={L.icon({
-            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
-            shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-            iconSize: [25, 41],
-            iconAnchor: [12, 41],
-            popupAnchor: [1, -34],
-            shadowSize: [41, 41]
+          icon={L.divIcon({
+            className: 'custom-marker',
+            html: `
+              <div style="
+                background-color: #1a1a1a;
+                width: 28px;
+                height: 28px;
+                border-radius: 50%;
+                border: 3px solid white;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+              "></div>
+            `,
+            iconSize: [28, 28],
+            iconAnchor: [14, 14],
           })}
         >
           <Popup>Selected Location</Popup>

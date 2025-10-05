@@ -22,18 +22,11 @@ function Statistics({ incidents, stats }) {
     return acc;
   }, {});
 
-  const timeEmojis = {
-    morning: '🌅',
-    afternoon: '☀️',
-    evening: '🌆',
-    night: '🌙'
-  };
-
   const timeLabels = {
-    morning: 'Morning (6AM-12PM)',
-    afternoon: 'Afternoon (12PM-5PM)',
-    evening: 'Evening (5PM-9PM)',
-    night: 'Night (9PM-6AM)'
+    morning: 'Morning',
+    afternoon: 'Afternoon',
+    evening: 'Evening',
+    night: 'Night'
   };
 
   return (
@@ -43,7 +36,7 @@ function Statistics({ incidents, stats }) {
       <div className="stat-section">
         <h4>Total Reports</h4>
         <div className="stat-item">
-          <span className="stat-label">All Incidents:</span>
+          <span className="stat-label">All Incidents</span>
           <span className="stat-value">{total}</span>
         </div>
       </div>
@@ -53,7 +46,7 @@ function Statistics({ incidents, stats }) {
           <h4>By Category</h4>
           {Object.entries(categoryCounts).map(([category, count]) => (
             <div className="stat-item" key={category}>
-              <span className="stat-label">{category}:</span>
+              <span className="stat-label">{category}</span>
               <span className="stat-value">{count}</span>
             </div>
           ))}
@@ -62,13 +55,13 @@ function Statistics({ incidents, stats }) {
 
       {Object.keys(timePeriodCounts).length > 0 && (
         <div className="stat-section">
-          <h4>By Time of Day</h4>
+          <h4>By Time Period</h4>
           {Object.entries(timePeriodCounts)
             .sort((a, b) => b[1] - a[1])
             .map(([period, count]) => (
               <div className="stat-item" key={period}>
                 <span className="stat-label">
-                  {timeEmojis[period]} {timeLabels[period]}:
+                  {timeLabels[period]}
                 </span>
                 <span className="stat-value">{count}</span>
               </div>
@@ -77,8 +70,8 @@ function Statistics({ incidents, stats }) {
       )}
 
       {total === 0 && (
-        <p style={{ color: '#999', fontSize: '0.9rem', marginTop: '1rem' }}>
-          No incidents reported yet. Click on the map to add one!
+        <p style={{ color: '#999', fontSize: '0.813rem', marginTop: '1rem', lineHeight: '1.5' }}>
+          No incidents reported yet. Click on the map to add one.
         </p>
       )}
     </div>

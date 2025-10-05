@@ -114,7 +114,7 @@ function VoiceReporter({ location, onSubmit, onClose }) {
     return (
       <div className="form-modal" onClick={onClose}>
         <div className="form-content voice-reporter" onClick={(e) => e.stopPropagation()}>
-          <h2>🎤 Voice Report Not Supported</h2>
+          <h2>Voice Report Not Supported</h2>
           <div className="error-message">
             <p>{error}</p>
             <p>Please use the manual reporting feature or try a different browser.</p>
@@ -135,7 +135,7 @@ function VoiceReporter({ location, onSubmit, onClose }) {
         <h2>Voice Report</h2>
         
         <div className="location-info">
-          📍 Location: {location.lat.toFixed(6)}, {location.lng.toFixed(6)}
+          Location: {location.lat.toFixed(6)}, {location.lng.toFixed(6)}
         </div>
 
         <div className="voice-controls">
@@ -159,13 +159,13 @@ function VoiceReporter({ location, onSubmit, onClose }) {
           </button>
 
           <p className="voice-hint">
-            Describe the safety incident in detail
+            Describe the incident in detail
           </p>
         </div>
 
         {transcription && (
           <div className="transcription-box">
-            <label>Transcription (you can edit this):</label>
+            <label>Transcription (editable)</label>
             <textarea
               value={transcription}
               onChange={handleManualEdit}
@@ -177,15 +177,15 @@ function VoiceReporter({ location, onSubmit, onClose }) {
 
         {error && (
           <div className="error-message">
-            ⚠️ {error}
+            {error}
           </div>
         )}
 
         <div className="voice-tips">
-          <strong>Tips:</strong>
+          <strong>Tips</strong>
           <ul>
-            <li>Speak clearly</li>
-            <li>You can edit the transcription before submitting</li>
+            <li>Speak clearly and at a moderate pace</li>
+            <li>Edit the transcription before submitting, if needed</li>
             <li>AI will automatically categorize your report</li>
           </ul>
         </div>

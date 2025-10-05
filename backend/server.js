@@ -16,12 +16,11 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
 app.use(cors());
 app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: false })); // For Twilio webhook
+app.use(bodyParser.urlencoded({ extended: false })); 
 
-// Initialize Twilio client (optional, only if credentials exist)
+// Initialize Twilio client
 let twilioClient = null;
 if (process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN) {
   twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
@@ -61,15 +60,14 @@ const writeIncidents = (incidents) => {
   }
 };
 
-// Helper function to get time period from timestamp
 const getTimePeriod = (timestamp) => {
   const date = new Date(timestamp);
   const hour = date.getHours();
   
-  if (hour >= 6 && hour < 12) return 'morning';      // 6 AM - 12 PM
-  if (hour >= 12 && hour < 17) return 'afternoon';   // 12 PM - 5 PM
-  if (hour >= 17 && hour < 21) return 'evening';     // 5 PM - 9 PM
-  return 'night';                                     // 9 PM - 6 AM
+  if (hour >= 6 && hour < 12) return 'morning';  
+  if (hour >= 12 && hour < 17) return 'afternoon';   
+  if (hour >= 17 && hour < 21) return 'evening';     
+  return 'night';                                    
 };
 
 // Helper function to filter incidents by time period
@@ -91,7 +89,7 @@ const categoryMapping = {
   'other': 'Other'
 };
 
-// AI-powered incident categorization
+// Incident categorization
 const categorizeIncident = async (description) => {
   try {
     console.log('Categorizing description:', description);
@@ -187,7 +185,7 @@ app.post('/api/incidents', async (req, res) => {
       });
     }
 
-    // Categorize incident using AI
+    // Categorize incident
     const category = await categorizeIncident(description);
 
     // Create new incident
@@ -274,7 +272,6 @@ app.get('/api/stats', (req, res) => {
 
 // Helper function to parse location from SMS text
 const parseLocation = (text) => {
-  // Look for coordinates in format: "lat: XX.XX, lng: YY.YY" or "40.7128, -74.0060"
   const coordPattern = /(?:lat:?\s*)?(-?\d+\.?\d*)[,\s]+(?:lng:?\s*)?(-?\d+\.?\d*)/i;
   const match = text.match(coordPattern);
   
@@ -285,20 +282,20 @@ const parseLocation = (text) => {
     };
   }
   
-  // Default to NYC coordinates if no location provided
+  // Default to New Brunswick coordinates if no location provided
   return {
-    latitude: 40.7128,
-    longitude: -74.0060
+    latitude: 40.5019,
+    longitude: -74.4505
   };
 };
 
-// SMS Webhook endpoint - receives SMS from Twilio
+// SMS webhook endpoint
 app.post('/api/sms-report', async (req, res) => {
   try {
     const { Body, From } = req.body;
     
-    console.log('📱 SMS received from:', From);
-    console.log('📝 Message:', Body);
+    console.log('SMS received from:', From);
+    console.log('Message:', Body);
     
     if (!Body) {
       const twiml = new twilio.twiml.MessagingResponse();
@@ -307,13 +304,13 @@ app.post('/api/sms-report', async (req, res) => {
       return;
     }
     
-    // Parse location from SMS (if provided)
+    // Parse location from SMS
     const location = parseLocation(Body);
     
     // Remove location coordinates from description if present
     const description = Body.replace(/(?:lat:?\s*)?-?\d+\.?\d*[,\s]+(?:lng:?\s*)?-?\d+\.?\d*/i, '').trim();
     
-    // Categorize incident using AI
+    // Categorize incident
     const category = await categorizeIncident(description);
     
     // Create incident
@@ -334,11 +331,11 @@ app.post('/api/sms-report', async (req, res) => {
     incidents.push(newIncident);
     writeIncidents(incidents);
     
-    console.log('✅ SMS incident created:', newIncident.id);
+    console.log('SMS incident created:', newIncident.id);
     
     // Send confirmation SMS
     const twiml = new twilio.twiml.MessagingResponse();
-    twiml.message(`Thank you! Your ${category} report has been recorded. Stay safe! 🔒`);
+    twiml.message(`Thank you! Your ${category} report has been recorded. Stay safe!`);
     res.type('text/xml').send(twiml.toString());
     
   } catch (error) {
@@ -349,13 +346,13 @@ app.post('/api/sms-report', async (req, res) => {
   }
 });
 
-// Voice transcription endpoint - receives transcribed text from frontend
+// Voice transcription endpoint
 app.post('/api/voice-report', async (req, res) => {
   try {
     const { transcription, latitude, longitude } = req.body;
     
-    console.log('🎤 Voice report received');
-    console.log('📝 Transcription:', transcription);
+    console.log('Voice report received');
+    console.log('Transcription:', transcription);
     
     if (!transcription || !latitude || !longitude) {
       return res.status(400).json({ 
@@ -363,7 +360,7 @@ app.post('/api/voice-report', async (req, res) => {
       });
     }
     
-    // Categorize incident using AI
+    // Categorize incident
     const category = await categorizeIncident(transcription);
     
     // Create incident
@@ -383,7 +380,7 @@ app.post('/api/voice-report', async (req, res) => {
     incidents.push(newIncident);
     writeIncidents(incidents);
     
-    console.log('✅ Voice incident created:', newIncident.id);
+    console.log('Voice incident created:', newIncident.id);
     
     res.status(201).json(newIncident);
     
@@ -393,7 +390,6 @@ app.post('/api/voice-report', async (req, res) => {
   }
 });
 
-// Health check
 app.get('/api/health', (req, res) => {
   const twilioConfigured = !!(process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN);
   res.json({ 
@@ -402,14 +398,14 @@ app.get('/api/health', (req, res) => {
     features: {
       ai: !!process.env.HUGGINGFACE_API_KEY,
       sms: twilioConfigured,
-      voice: true // Browser-based, always available
+      voice: true
     }
   });
 });
 
 app.listen(PORT, () => {
-  console.log(`🚀 SafeRoute backend running on port ${PORT}`);
-  console.log(`📍 API endpoints available at http://localhost:${PORT}/api`);
-  console.log(`📱 SMS webhook: POST ${PORT}/api/sms-report`);
-  console.log(`🎤 Voice endpoint: POST ${PORT}/api/voice-report`);
+  console.log(`SafeRoute backend running on port ${PORT}`);
+  console.log(`API endpoints available at http://localhost:${PORT}/api`);
+  console.log(`SMS webhook: POST ${PORT}/api/sms-report`);
+  console.log(`Voice endpoint: POST ${PORT}/api/voice-report`);
 });

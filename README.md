@@ -71,7 +71,7 @@ copy .env.example .env
 REACT_APP_API_URL=http://localhost:5000/api
 ```
 
-## ▶️ Running the Application
+## Running the Application
 
 ### Start Backend
 

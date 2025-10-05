@@ -3,9 +3,9 @@ import React from 'react';
 function SMSInfo() {
   return (
     <div className="sms-info">
-      <h3>📱 Report via SMS</h3>
+      <h3>Report via SMS</h3>
       <p className="sms-description">
-        Can't use the app? Send a text message to report incidents.
+        Unable to use the website? Send a text message to report incidents.
       </p>
       
       <div className="sms-number">
@@ -16,29 +16,18 @@ function SMSInfo() {
       <div className="sms-format">
         <strong>Message Format:</strong>
         <div className="format-example">
-          <code>Someone is following me near 5th Ave</code>
+          <code>Someone is following me near College Avenue Student Center.</code>
         </div>
         <p className="format-note">
-          Optional: Include coordinates like "40.7128, -74.0060"
+          Tip: For accurate location representation, try to describe landmarks or specific addresses.
         </p>
       </div>
 
       <div className="sms-examples">
         <strong>Examples:</strong>
         <ul>
-          <li>💡 "Street lights broken on Main St"</li>
-          <li>🚨 "Got harassed at bus stop, 40.7128, -74.0060"</li>
-          <li>⚠️ "Suspicious person near Central Park"</li>
-        </ul>
-      </div>
-
-      <div className="sms-benefits">
-        <strong>Why SMS?</strong>
-        <ul>
-          <li>✅ Works without internet</li>
-          <li>✅ Quick and easy in emergencies</li>
-          <li>✅ Accessible to everyone</li>
-          <li>✅ AI categorizes automatically</li>
+          <li>"Street lights broken on George Street"</li>
+          <li>"Suspicious person near New Brunswick train station"</li>
         </ul>
       </div>
     </div>

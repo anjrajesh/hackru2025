@@ -11,7 +11,7 @@ function TimeFilter({ selectedPeriod, onPeriodChange }) {
 
   return (
     <div className="time-filter">
-      <h3>⏰ Filter by Time</h3>
+      <h3>Filter by Time</h3>
       <p className="filter-description">
         View when incidents occur to plan safer routes
       </p>
@@ -32,7 +32,7 @@ function TimeFilter({ selectedPeriod, onPeriodChange }) {
 
       {selectedPeriod !== 'all' && (
         <div className="filter-active-notice">
-          <span>📍 Showing only {selectedPeriod} incidents</span>
+          <span>Currently only showing only {selectedPeriod} incidents</span>
         </div>
       )}
     </div>

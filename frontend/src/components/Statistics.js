@@ -8,7 +8,6 @@ function Statistics({ incidents, stats }) {
 
   const total = incidents.length;
 
-  // Calculate time period counts from current incidents
   const timePeriodCounts = incidents.reduce((acc, incident) => {
     const date = new Date(incident.timestamp);
     const hour = date.getHours();
@@ -39,7 +38,7 @@ function Statistics({ incidents, stats }) {
 
   return (
     <div className="statistics">
-      <h3>📊 Statistics</h3>
+      <h3>Statistics</h3>
       
       <div className="stat-section">
         <h4>Total Reports</h4>
@@ -65,7 +64,7 @@ function Statistics({ incidents, stats }) {
         <div className="stat-section">
           <h4>By Time of Day</h4>
           {Object.entries(timePeriodCounts)
-            .sort((a, b) => b[1] - a[1]) // Sort by count descending
+            .sort((a, b) => b[1] - a[1])
             .map(([period, count]) => (
               <div className="stat-item" key={period}>
                 <span className="stat-label">

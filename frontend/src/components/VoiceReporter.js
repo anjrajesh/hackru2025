@@ -9,7 +9,7 @@ function VoiceReporter({ location, onSubmit, onClose }) {
   const [browserSupported, setBrowserSupported] = useState(true);
 
   useEffect(() => {
-    // Check if browser supports Speech Recognition
+    // Check if browser supports speech recognition
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     
     if (!SpeechRecognition) {
@@ -18,7 +18,6 @@ function VoiceReporter({ location, onSubmit, onClose }) {
       return;
     }
 
-    // Initialize speech recognition
     const recognitionInstance = new SpeechRecognition();
     recognitionInstance.continuous = true;
     recognitionInstance.interimResults = true;
@@ -133,7 +132,7 @@ function VoiceReporter({ location, onSubmit, onClose }) {
   return (
     <div className="form-modal" onClick={onClose}>
       <div className="form-content voice-reporter" onClick={(e) => e.stopPropagation()}>
-        <h2>🎤 Voice Report</h2>
+        <h2>Voice Report</h2>
         
         <div className="location-info">
           📍 Location: {location.lat.toFixed(6)}, {location.lng.toFixed(6)}
@@ -183,9 +182,9 @@ function VoiceReporter({ location, onSubmit, onClose }) {
         )}
 
         <div className="voice-tips">
-          <strong>💡 Tips:</strong>
+          <strong>Tips:</strong>
           <ul>
-            <li>Speak clearly and describe what happened</li>
+            <li>Speak clearly</li>
             <li>You can edit the transcription before submitting</li>
             <li>AI will automatically categorize your report</li>
           </ul>

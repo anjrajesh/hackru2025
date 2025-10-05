@@ -9,19 +9,19 @@ import './App.css';
 
 function App() {
   const [incidents, setIncidents] = useState([]);
-  const [allIncidents, setAllIncidents] = useState([]); // Store all incidents for stats
+  const [allIncidents, setAllIncidents] = useState([]); // store all incidents for stats
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [showVoiceReporter, setShowVoiceReporter] = useState(false);
   const [showSMSInfo, setShowSMSInfo] = useState(false);
-  const [reportingMethod, setReportingMethod] = useState('manual'); // 'manual', 'voice'
+  const [reportingMethod, setReportingMethod] = useState('manual'); 
   const [loading, setLoading] = useState(true);
   const [selectedTimePeriod, setSelectedTimePeriod] = useState('all');
   const [stats, setStats] = useState(null);
 
   const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
-  // Fetch incidents when component mounts or time period changes
+  // Fetch incidents for a certain time period
   useEffect(() => {
     fetchIncidents();
     fetchStats();
@@ -37,7 +37,7 @@ function App() {
       const data = await response.json();
       setIncidents(data);
       
-      // Also fetch all incidents for complete stats
+      // Fetching all incidents 
       if (selectedTimePeriod !== 'all') {
         const allResponse = await fetch(`${API_URL}/incidents`);
         const allData = await allResponse.json();
@@ -66,7 +66,6 @@ function App() {
   const handleMapClick = (lat, lng) => {
     setSelectedLocation({ lat, lng });
     
-    // Show appropriate form based on reporting method
     if (reportingMethod === 'voice') {
       setShowVoiceReporter(true);
     } else {
@@ -86,7 +85,7 @@ function App() {
 
       if (response.ok) {
         const newIncident = await response.json();
-        // Refresh incidents and stats
+        // Refresh incidents
         fetchIncidents();
         fetchStats();
         setShowForm(false);
@@ -112,7 +111,7 @@ function App() {
 
       if (response.ok) {
         const newIncident = await response.json();
-        // Refresh incidents and stats
+        // Refresh incidents
         fetchIncidents();
         fetchStats();
         setShowVoiceReporter(false);
@@ -140,14 +139,14 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>🔒 SafeRoute</h1>
-        <p>AI-Powered Urban Safety Map</p>
+        <h1>WDR</h1>
+        <p>Walk, Detect, Report</p>
       </header>
 
       <div className="App-content">
         <div className="sidebar">
           <div className="reporting-method">
-            <h3>📝 Reporting Method</h3>
+            <h3>Reporting Method</h3>
             <div className="method-buttons">
               <button
                 className={`method-btn ${reportingMethod === 'manual' ? 'active' : ''}`}
@@ -202,7 +201,7 @@ function App() {
           </div>
 
           <div className="legend">
-            <h3>Incident Categories</h3>
+            <h3>Incident Key</h3>
             <div className="legend-item">
               <span className="legend-color harassment"></span>
               <span>Harassment</span>

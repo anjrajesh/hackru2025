@@ -7,7 +7,6 @@ import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import 'leaflet.markercluster';
 import 'leaflet.heat';
 
-// Fix for default marker icons
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
@@ -15,11 +14,11 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 });
 
-// Custom marker icons for different categories
+// Marker icons for different categories
 const createCustomIcon = (category) => {
   const colors = {
-    'Harassment': '#e74c3c',
     'Assault': '#c0392b',
+    'Harassment': '#e74c3c',
     'Lighting Issue': '#f39c12',
     'Suspicious Behavior': '#e67e22',
     'Other': '#95a5a6'
@@ -44,7 +43,6 @@ const createCustomIcon = (category) => {
   });
 };
 
-// Component to handle map clicks
 function MapClickHandler({ onMapClick }) {
   useMapEvents({
     click: (e) => {
@@ -54,7 +52,6 @@ function MapClickHandler({ onMapClick }) {
   return null;
 }
 
-// Component to add marker clusters and heatmap
 function IncidentLayers({ incidents }) {
   const mapRef = useRef(null);
 
@@ -62,7 +59,6 @@ function IncidentLayers({ incidents }) {
     const map = mapRef.current;
     if (!map) return;
 
-    // Clear existing layers
     map.eachLayer((layer) => {
       if (layer instanceof L.MarkerClusterGroup || layer instanceof L.HeatLayer) {
         map.removeLayer(layer);
@@ -71,7 +67,6 @@ function IncidentLayers({ incidents }) {
 
     if (incidents.length === 0) return;
 
-    // Create marker cluster group
     const markers = L.markerClusterGroup({
       chunkedLoading: true,
       spiderfyOnMaxZoom: true,
@@ -79,7 +74,6 @@ function IncidentLayers({ incidents }) {
       zoomToBoundsOnClick: true,
     });
 
-    // Add markers to cluster group
     incidents.forEach((incident) => {
       const marker = L.marker([incident.latitude, incident.longitude], {
         icon: createCustomIcon(incident.category)
@@ -98,11 +92,11 @@ function IncidentLayers({ incidents }) {
 
     map.addLayer(markers);
 
-    // Create heatmap layer
+    // Create heatmap
     const heatData = incidents.map((incident) => [
       incident.latitude,
       incident.longitude,
-      0.5 // intensity
+      0.5 
     ]);
 
     const heat = L.heatLayer(heatData, {
@@ -120,7 +114,6 @@ function IncidentLayers({ incidents }) {
 
     map.addLayer(heat);
 
-    // Cleanup
     return () => {
       map.removeLayer(markers);
       map.removeLayer(heat);
@@ -130,13 +123,11 @@ function IncidentLayers({ incidents }) {
   return null;
 }
 
-// Map component with ref handling
 function MapContent({ incidents, onMapClick, selectedLocation }) {
   const mapRef = useRef(null);
 
   useEffect(() => {
     if (mapRef.current) {
-      // Store map instance for IncidentLayers
       mapRef.current._leafletMap = mapRef.current;
     }
   }, []);
@@ -184,14 +175,14 @@ function MapContent({ incidents, onMapClick, selectedLocation }) {
 }
 
 function Map({ incidents, onMapClick, selectedLocation }) {
-  // Default center (New York City)
-  const defaultCenter = [40.7128, -74.0060];
-  const defaultZoom = 13;
+  // Default center - New Brunswick
+  const defaultCenter = [40.5019, -74.4505];
+  const zoom = 16;
 
   return (
     <MapContainer
       center={defaultCenter}
-      zoom={defaultZoom}
+      zoom={zoom}
       style={{ height: '100%', width: '100%' }}
       ref={(map) => {
         if (map) {

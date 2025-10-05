@@ -51,7 +51,7 @@ function IncidentForm({ location, onSubmit, onClose }) {
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Describe what happened... (AI will automatically categorize this)"
+              placeholder="Describe what happened..."
               required
             />
           </div>
